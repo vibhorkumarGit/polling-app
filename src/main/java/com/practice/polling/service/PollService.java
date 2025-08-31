@@ -1,11 +1,14 @@
 package com.practice.polling.service;
 
 
-import com.practice.polling.Dto.PollDto;
+import com.practice.polling.Dto.PollCreateRequest;
+import com.practice.polling.Dto.PollCreateResponse;
 import com.practice.polling.entity.Poll;
 import com.practice.polling.mapper.PollMapper;
 import com.practice.polling.repository.PollRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class PollService {
@@ -18,11 +21,13 @@ public class PollService {
         this.pollMapper = pollMapper;
     }
 
-    public PollDto createPoll(PollDto pollDto) {
+    public PollCreateResponse createPoll(PollCreateRequest pollDto) {
         Poll poll = pollMapper.toEntity(pollDto);
+
+        poll.setPollId(UUID.randomUUID());
 
         Poll SavedPoll = pollRepository.save(poll);
 
-        return pollMapper.toDto(SavedPoll);
+        return pollMapper.toPollResponse(SavedPoll);
     }
 }
